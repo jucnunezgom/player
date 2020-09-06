@@ -244,10 +244,10 @@ function handleCursorChangeOnHover(e) {
         cursorCircle.classList.add('opacitytwo');
         cursorCircle.textContent = '';
     }
-    const playerPosition = videoContainer.getBoundingClientRect();
+    const playerPosition = playerContainer.getBoundingClientRect();
     cursorCircle.style.display = '';
-    let xPosition = e.pageX;
-    let yPosition = e.pageY;
+    let xPosition = e.pageX - playerPosition.left;
+    let yPosition = e.pageY - playerPosition.top;
     cursorCircle.style.left = `${xPosition}px`;
     cursorCircle.style.top = `${yPosition}px`;
 }
