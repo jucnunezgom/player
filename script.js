@@ -246,8 +246,8 @@ function handleCursorChangeOnHover(e) {
     }
     const playerPosition = videoContainer.getBoundingClientRect();
     cursorCircle.style.display = '';
-    let xPosition = e.pageX - playerPosition.left;
-    let yPosition = e.pageY - playerPosition.top;
+    let xPosition = e.pageX;
+    let yPosition = e.pageY;
     cursorCircle.style.left = `${xPosition}px`;
     cursorCircle.style.top = `${yPosition}px`;
 }
