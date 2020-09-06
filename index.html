@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <main>
+        <div class="video-player-container">
+            <div class="cursor-circle"></div>
+            <video class="video-container" poster="#">
+                <source src="#" type="video/mp4">
+            </video>
+            <div class="video-overlay">
+                <div class="video-overlay-content">
+                    <div class="video-info-container">
+                        <div class="container-default-status">
+                            <div class="video-info-title-container">
+                                <span class="video-title-text">Loading...</span>
+                            </div>
+                            <div class="video-info-more-container">
+                                <span class="video-creator-text">Loading...</span>
+                                <span class="video-total-time-text">Loading...</span>
+                            </div>
+                            <div class="button-watch-video" role="button">
+                                <span class="watch-text">Watch</span>
+                                <div class="play-icon"></div>
+                            </div>
+                        </div>
+                        <div class="container-watching-status nodisplay">
+                            <div class="watching-top">
+                                <div class="watching-info-container">
+                                    <div class="watching-info video-info-title-container">
+                                        <span class="video-title-text">Loading...</span>
+                                    </div>
+                                    <div class="watching-info video-info-more-container">
+                                        <span class="video-creator-text">Loading...</span>
+                                        <span class="video-total-time-text">Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="top-buttons-container">
+                                    <div class="control-button playlist-button"></div>
+                                    <div class="control-button volume-button">
+                                        <div class="volume-bar-container nodisplay">
+                                            <div class="volume-bar">
+                                                <div class="volume"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="watching-mid">
+                                <div class="previous-button-container"></div>
+                                <div class="pause-play-button-container"></div>
+                                <div class="next-button-container"></div>
+                            </div>
+                            <div class="watching-bottom">
+                                <div class="control-button stop-button"></div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-background">
+                                        <div class="progress-bar">
+                                            <div class="progress"></div>
+                                        </div>
+                                    </div>
+                                    <span class="current-time">00:00</span>
+                                </div>
+                                <div class="control-button expand-button"></div>
+                            </div>
+                        </div>
+                        <div class="container-playlist-status nodisplay">
+                            <div class="playlist-header">
+                                <div class="control-button playlist-back-button"></div>
+                                <span class="playlist-title">Playlist</span>
+                            </div>
+                            <div class="playlist-previous-button-container">
+                                <div class="control-button playlist-previous-button-icon">
+                                </div>
+                            </div>
+                            <div class="playlist-next-button-container">
+                                <div class="control-button playlist-next-button-icon">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="./script.js"></script>
+</body>
+
+</html>
