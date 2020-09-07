@@ -101,9 +101,9 @@ const videos = [
 
 const watchButton = document.querySelector('.button-watch-video');
 const videoOverlay = document.querySelector('.video-overlay');
-const VideoTitleText = document.querySelectorAll('.video-title-text');
-const VideoCreatorText = document.querySelectorAll('.video-creator-text');
-const VideoTotalTimeText = document.querySelectorAll('.video-total-time-text');
+const videoTitleText = document.querySelectorAll('.video-title-text');
+const videoCreatorText = document.querySelectorAll('.video-creator-text');
+const videoTotalTimeText = document.querySelectorAll('.video-total-time-text');
 const overlayDefaultContent = document.querySelector('.container-default-status');
 const overlayWatchingContent = document.querySelector('.container-watching-status');
 const overlayPlaylistContent = document.querySelector('.container-playlist-status');
@@ -269,7 +269,6 @@ function handlePausePlayButtonCLick() {
 }
 
 function handleEndOfVideo() {
-    //clearInterval(progressBarInterval);
     videoContainer.classList.add('nodisplay');
     if (player.nextVideo !== null) {
         loadVideo(player.nextVideo);
@@ -418,12 +417,12 @@ function handlePlaylistBackButtonClick() {
 function updateVideoInfo(vid) {
     const title = vid.title.length > 40 ? `${vid.title.substr(0, 40)}~` : vid.title;
     const publisher = vid.publisher.length > 30 ? `${vid.publisher.substr(0, 30)}~` : vid.publisher;
-    VideoTitleText.forEach(span => span.textContent = title);
-    VideoCreatorText.forEach(span => span.textContent = publisher);
+    videoTitleText.forEach(span => span.textContent = title);
+    videoCreatorText.forEach(span => span.textContent = publisher);
     const { minutes, seconds } = formatTime(videoContainer.duration);
     const realMinutes = parseInt(minutes) > 0 ? `${parseInt(minutes)} minutes` : '';
     const realSeconds = parseInt(seconds) > 0 ? `${parseInt(seconds)} seconds` : '';
-    VideoTotalTimeText.forEach(span => span.textContent = `${realMinutes} ${realSeconds}`);
+    videoTotalTimeText.forEach(span => span.textContent = `${realMinutes} ${realSeconds}`);
 }
 
 function updatePlayerVideos(vid) {
@@ -566,6 +565,7 @@ function handlePlaylistVideoClick(e) {
         if (Number(e.target.id) === player.currentVideo.id && e.target.classList.contains('current-video-overlay')) {
             handlePlaylistBackButtonClick();
         } else {
+            videoContainer.classList.add('nodisplay');
             loadVideo(currentVideo);
             videoContainer.play();
             progressBarInterval = setInterval(updateProgressBar, 500);
@@ -575,18 +575,24 @@ function handlePlaylistVideoClick(e) {
     }
 }
 
+function handlePreventDefault(e) {
+    e.preventDefault();
+}
+
+function handleLoadedMetaData() {
+    updateVideoInfo(player.currentVideo);
+}
+
 playerContainer.addEventListener('mousemove', handleCursorChangeOnHover);
 playerContainer.addEventListener('mouseleave', handleCursorChangeOnLeave);
 playerContainer.addEventListener('click', handlePlayerContainerClick);
-playerContainer.addEventListener('contextmenu', (e) => e.preventDefault());
+playerContainer.addEventListener('contextmenu', handlePreventDefault);
 pausePlayButtonContainer.addEventListener('click', handlePausePlayButtonCLick);
 watchingPreviousButton.addEventListener('click', handleWatchingPreviousNextButtonCLick);
 watchingNextButton.addEventListener('click', handleWatchingPreviousNextButtonCLick);
 videoContainer.addEventListener('ended', handleEndOfVideo);
 videoContainer.addEventListener('loadeddata', handleLoadedData);
-videoContainer.addEventListener('loadedmetadata', () => {
-    updateVideoInfo(player.currentVideo);
-});
+videoContainer.addEventListener('loadedmetadata', handleLoadedMetaData);
 watchButton.addEventListener('click', handleWatchButtonClick);
 expandButton.addEventListener('click', handleExpandButtonClick);
 stopButton.addEventListener('click', handleStopButtonClick)
