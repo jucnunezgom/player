@@ -204,7 +204,7 @@ function handleStopButtonClick() {
 
 function handleCursorChangeOnHover(e) {
     if (playerHoverInterval) { clearTimeout(playerHoverInterval) }
-    if (!overlayWatchingContent.classList.contains('nodisplay')) {
+    if (!overlayWatchingContent.classList.contains('nodisplay') || !overlayPlaylistContent.classList.contains('nodisplay')) {
         videoOverlay.classList.add('needs-hover');
         videoOverlay.classList.remove('nodisplay');
         cursorCircle.classList.remove('nodisplay');
