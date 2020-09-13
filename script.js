@@ -115,7 +115,6 @@ const watchingPreviousButton = document.querySelector('.previous-button-containe
 const watchingNextButton = document.querySelector('.next-button-container');
 const videoContainer = document.querySelector('.video-container');
 const cursorCircle = document.querySelector('.cursor-circle');
-cursorCircle.style.display = 'none';
 const watchingInfo = document.querySelector('.watching-info-container');
 const progressBarBackground = document.querySelector('.progress-bar-background');
 const volumeBarBackground = document.querySelector('.volume-bar-container');
@@ -159,7 +158,7 @@ function handleWatchButtonClick() {
     overlayDefaultContent.classList.add('nodisplay');
     overlayWatchingContent.classList.remove('nodisplay');
     videoContainer.play();
-    progressBarInterval = setInterval(updateProgressBar, 500);
+    startProgressBarInterval();
 }
 
 function handleExpandButtonClick() {
@@ -196,23 +195,33 @@ function handleExpandButtonClick() {
 }
 
 function handleStopButtonClick() {
-    videoOverlay.classList.toggle('needs-hover');
-    overlayDefaultContent.classList.remove('nodisplay');
+    if (playerHoverInterval) { clearTimeout(playerHoverInterval) }
+    cursorCircle.classList.remove('cursor-hover');
+    cursorCircle.classList.add('opacitytwo');
+    cursorCircle.textContent = '';
+    videoOverlay.classList.remove('needs-hover');
+    videoOverlay.classList.remove('nodisplay');
     overlayWatchingContent.classList.add('nodisplay');
+    overlayPlaylistContent.classList.add('nodisplay');
+    overlayDefaultContent.classList.remove('nodisplay');
+    cursorCircle.textContent = '';
     videoContainer.load();
 }
 
 function handleCursorChangeOnHover(e) {
     if (playerHoverInterval) { clearTimeout(playerHoverInterval) }
+    videoOverlay.classList.remove('nodisplay');
+    cursorCircle.classList.remove('nodisplay');
     if (!overlayWatchingContent.classList.contains('nodisplay') || !overlayPlaylistContent.classList.contains('nodisplay')) {
         videoOverlay.classList.add('needs-hover');
         videoOverlay.classList.remove('nodisplay');
         cursorCircle.classList.remove('nodisplay');
         playerHoverInterval = setTimeout(() => {
+            hideVolumeBar();
             videoOverlay.classList.remove('needs-hover');
             videoOverlay.classList.add('nodisplay');
             cursorCircle.classList.add('nodisplay');
-        }, 2000);
+        }, 1000);
 
     }
     if (e.target.classList.contains('control-button') || e.target.classList.contains('button-watch-video') || e.target.classList.contains('playlist-video')) {
@@ -252,8 +261,9 @@ function handleCursorChangeOnHover(e) {
     cursorCircle.style.top = `${yPosition}px`;
 }
 
-function handleCursorChangeOnLeave(e) {
+function handleCursorChangeOnLeave() {
     cursorCircle.style.display = 'none';
+    hideVolumeBar();
 }
 
 function handlePausePlayButtonCLick() {
@@ -264,7 +274,7 @@ function handlePausePlayButtonCLick() {
     } else if (videoContainer.currentTime && videoContainer.paused && !videoContainer.ended) {
         videoContainer.play();
         cursorCircle.textContent = 'Pause';
-        progressBarInterval = setInterval(updateProgressBar, 500);
+        startProgressBarInterval();
     }
 }
 
@@ -273,24 +283,16 @@ function handleEndOfVideo() {
     if (player.nextVideo !== null) {
         loadVideo(player.nextVideo);
         videoContainer.play();
-        progressBarInterval = setInterval(updateProgressBar, 500);
+        startProgressBarInterval();
     } else {
-        videoOverlay.classList.toggle('needs-hover');
-        overlayDefaultContent.classList.remove('nodisplay');
-        overlayWatchingContent.classList.add('nodisplay');
-        overlayPlaylistContent.classList.add('nodisplay');
-        cursorCircle.textContent = '';
-        videoContainer.load();
+        handleStopButtonClick();
     }
 }
 
 function handleFullScreenStyles(e) {
     const infoMarginBottom = window.getComputedStyle(watchingInfo).getPropertyValue('margin-bottom');
     watchingInfo.style.marginBottom = infoMarginBottom === '-20px' ? '0px' : '-20px';
-    volumeBarBackground.classList.add('nodisplay');
-    if (player.nextVideo !== null) {
-        watchingNextButton.classList.remove('nodisplay');
-    }
+    hideVolumeBar();
     updateProgressBar();
     updateVolumeBar()
 }
@@ -380,10 +382,14 @@ function handlePlayerContainerClick(e) {
         return;
     }
     if (!e.target.classList.contains('volume-button')) {
-        volumeBarBackground.classList.add('nodisplay');
-        if (player.nextVideo !== null) {
-            watchingNextButton.classList.remove('nodisplay');
-        }
+        hideVolumeBar();
+    }
+}
+
+function hideVolumeBar() {
+    volumeBarBackground.classList.add('nodisplay');
+    if (player.nextVideo !== null) {
+        watchingNextButton.classList.remove('nodisplay');
     }
 }
 
@@ -408,7 +414,7 @@ function handlePlaylistButtonClick() {
 
 function handlePlaylistBackButtonClick() {
     videoContainer.play();
-    progressBarInterval = setInterval(updateProgressBar, 500);
+    startProgressBarInterval();
     videoOverlay.classList.remove('opacityeight');
     overlayPlaylistContent.classList.add('nodisplay');
     overlayWatchingContent.classList.remove('nodisplay');
@@ -420,8 +426,8 @@ function updateVideoInfo(vid) {
     videoTitleText.forEach(span => span.textContent = title);
     videoCreatorText.forEach(span => span.textContent = publisher);
     const { minutes, seconds } = formatTime(videoContainer.duration);
-    const realMinutes = parseInt(minutes) > 0 ? `${parseInt(minutes)} minutes` : '';
-    const realSeconds = parseInt(seconds) > 0 ? `${parseInt(seconds)} seconds` : '';
+    const realMinutes = parseInt(minutes) > 0 ? parseInt(minutes) > 1 ? `${parseInt(minutes)} minutes` : `${parseInt(minutes)} minute` : '';
+    const realSeconds = parseInt(seconds) > 0 ? parseInt(seconds) > 1 ? `${parseInt(seconds)} seconds` : `${parseInt(seconds)} second` : '';
     videoTotalTimeText.forEach(span => span.textContent = `${realMinutes} ${realSeconds}`);
 }
 
@@ -485,7 +491,7 @@ function handleWatchingPreviousNextButtonCLick(e) {
         }
     }
     videoContainer.play();
-    progressBarInterval = setInterval(updateProgressBar, 500);
+    startProgressBarInterval();
 }
 
 function handleLoadedData() {
@@ -568,7 +574,7 @@ function handlePlaylistVideoClick(e) {
             videoContainer.classList.add('nodisplay');
             loadVideo(currentVideo);
             videoContainer.play();
-            progressBarInterval = setInterval(updateProgressBar, 500);
+            startProgressBarInterval();
             overlayPlaylistContent.classList.add('nodisplay');
             overlayWatchingContent.classList.remove('nodisplay');
         }
@@ -581,6 +587,10 @@ function handlePreventDefault(e) {
 
 function handleLoadedMetaData() {
     updateVideoInfo(player.currentVideo);
+}
+
+function startProgressBarInterval() {
+    progressBarInterval = setInterval(updateProgressBar, 500);
 }
 
 playerContainer.addEventListener('mousemove', handleCursorChangeOnHover);
