@@ -351,7 +351,6 @@ function handleVolumeBarClick(e) {
     currentVolume = videoContainer.volume;
     actualVolume.style.height = `${positionClicked}px`;
     volumePixels = actualVolume.style.height;
-    console.log(actualVolume.style.height, barSize);
 }
 
 function handleVolumeButtonClick(e) {
@@ -485,7 +484,6 @@ function handleWatchingPreviousNextButtonCLick(e) {
             videoContainer.classList.add('nodisplay');
             loadVideo(player.nextVideo);
             if (player.nextVideo === null) {
-                console.log('NANIII');
                 watchingNextButton.classList.add('nodisplay');
             }
         }
